@@ -27,7 +27,7 @@ Les variables principales sont en haut de `styles.css` :
 
 Dans `index.html`, remplacer notamment :
 
-- `contact@ydrax.fr`
+- `contact.ydra@gmail.com`
 - les textes des services
 - les réalisations
 - les statistiques
