@@ -20,7 +20,7 @@ body {
   min-width: 320px;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 78% 10%, rgba(56,132,202,.075), transparent 28rem),
+    radial-gradient(circle at 78% 10%, rgba(56,132,202,.055), transparent 27rem),
     var(--bg);
   color: var(--text);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -187,56 +187,21 @@ button, a { -webkit-tap-highlight-color: transparent; }
   right: -4%;
   top: 50%;
   transform: translateY(-50%);
-  transition: transform .12s linear;
+  will-change: transform, opacity;
 }
 .network-glow {
   position: absolute;
-  inset: 12%;
+  inset: 18%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(72,163,255,.16), rgba(72,163,255,.035) 48%, transparent 70%);
-  filter: blur(25px);
+  background: radial-gradient(circle, rgba(72,163,255,.06), rgba(72,163,255,.015) 48%, transparent 70%);
+  filter: blur(30px);
 }
-.globe {
-  position: absolute;
-  inset: 17%;
-  border-radius: 50%;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 35% 29%, rgba(180,225,255,.11), transparent 24%),
-    radial-gradient(circle at 52% 53%, rgba(22,42,58,.42), rgba(0,0,0,.78) 70%);
-  border: 1px solid rgba(170,220,255,.13);
-  box-shadow:
-    inset -40px -15px 70px rgba(0,0,0,.92),
-    inset 20px 10px 50px rgba(120,190,255,.06),
-    0 0 90px rgba(60,150,255,.08);
-}
-.globe::before,
-.globe::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border: 1px solid rgba(160,215,255,.09);
-  border-radius: 50%;
-}
-.globe::before { transform: scaleX(.46); }
-.globe::after { transform: scaleY(.46); }
-.globe-grid {
-  position: absolute;
-  inset: 8%;
-  border-radius: 50%;
-  opacity: .35;
-  background-image:
-    linear-gradient(90deg, transparent 49.5%, rgba(155,210,255,.09) 50%, transparent 50.5%),
-    linear-gradient(transparent 49.5%, rgba(155,210,255,.07) 50%, transparent 50.5%);
-  background-size: 34% 100%, 100% 34%;
-}
-.globe-grid-a { transform: rotate(25deg); }
-.globe-grid-b { transform: rotate(-25deg); opacity: .2; }
-#networkCanvas {
+#globeCanvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  display: block;
 }
 .network-label {
   position: absolute;
@@ -253,6 +218,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
   backdrop-filter: blur(12px);
   box-shadow: 0 12px 45px rgba(0,0,0,.28);
   animation: labelFloat 5s ease-in-out infinite;
+  transition: border-color .3s ease, background .3s ease, transform .3s ease;
+  cursor: default;
+}
+.network-label.active,
+.network-label:hover {
+  border-color: rgba(190,225,255,.42);
+  background: rgba(10,18,26,.82);
 }
 .network-label i {
   width: 6px;
