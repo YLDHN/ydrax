@@ -4,6 +4,44 @@ window.addEventListener("scroll", () => {
   navbar.classList.toggle("scrolled", window.scrollY > 30);
 });
 
+const navToggle = document.getElementById("navToggle");
+const mobileMenu = document.getElementById("mobileMenu");
+
+function setMenu(open) {
+  navToggle.setAttribute("aria-expanded", String(open));
+  navToggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+  document.body.classList.toggle("menu-open", open);
+
+  if (open) {
+    mobileMenu.hidden = false;
+    requestAnimationFrame(() => mobileMenu.classList.add("open"));
+  } else {
+    mobileMenu.classList.remove("open");
+    setTimeout(() => {
+      if (navToggle.getAttribute("aria-expanded") === "false") mobileMenu.hidden = true;
+    }, 300);
+  }
+}
+
+navToggle.addEventListener("click", () => {
+  setMenu(navToggle.getAttribute("aria-expanded") !== "true");
+});
+
+mobileMenu.addEventListener("click", event => {
+  if (event.target.closest("a")) setMenu(false);
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && navToggle.getAttribute("aria-expanded") === "true") {
+    setMenu(false);
+    navToggle.focus();
+  }
+});
+
+window.matchMedia("(min-width: 761px)").addEventListener("change", event => {
+  if (event.matches) setMenu(false);
+});
+
 const revealObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {

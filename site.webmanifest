@@ -1,0 +1,14 @@
+{
+  "name": "YDRAx",
+  "short_name": "YDRAx",
+  "description": "Sites web, IA, systèmes & réseaux, infrastructure.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030609",
+  "theme_color": "#030609",
+  "lang": "fr",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

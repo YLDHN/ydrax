@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="halo" cx="38%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#2b5f8c"/>
+      <stop offset="55%" stop-color="#0c1620"/>
+      <stop offset="100%" stop-color="#030609"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#030609"/>
+  <circle cx="32" cy="32" r="21" fill="url(#halo)"/>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#9bd2ff" stroke-opacity=".45" stroke-width="1.2"/>
+  <ellipse cx="32" cy="32" rx="21" ry="8" fill="none" stroke="#9bd2ff" stroke-opacity=".28" stroke-width="1"/>
+  <ellipse cx="32" cy="32" rx="8.5" ry="21" fill="none" stroke="#9bd2ff" stroke-opacity=".2" stroke-width="1"/>
+  <circle cx="20.5" cy="23" r="2.1" fill="#dff1ff"/>
+  <circle cx="43" cy="27" r="1.7" fill="#bfe5ff"/>
+  <circle cx="36" cy="45" r="1.5" fill="#bfe5ff"/>
+  <path d="M20.5 23 Q34 14 43 27" fill="none" stroke="#9bd2ff" stroke-opacity=".7" stroke-width="1.1"/>
+  <path d="M43 27 Q44 40 36 45" fill="none" stroke="#9bd2ff" stroke-opacity=".5" stroke-width="1.1"/>
+</svg>
