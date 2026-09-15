@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#030609" />
+  <meta name="description" content="YDRAx — Sites web, IA, systèmes, réseaux et infrastructure." />
+  <title>YDRAx — Build. Connect. Scale.</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="logo" href="#home" aria-label="YDRAx accueil">YDRA<span>x</span></a>
+
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a class="active" href="#home">Accueil</a>
+        <a href="#services">Services</a>
+        <a href="#approach">Approche</a>
+        <a href="#projects">Réalisations</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="nav-cta" href="#contact">Discutons <span>↗</span></a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-grid" aria-hidden="true"></div>
+
+      <div class="container hero-container">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">BUILD · CONNECT · SCALE</p>
+
+          <h1>Des idées<br />à des <strong>systèmes</strong><br />performants.</h1>
+
+          <p class="hero-description">
+            Nous concevons, développons et déployons des solutions web,
+            des systèmes intelligents et des infrastructures solides
+            pour faire évoluer votre activité.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#contact">
+              Démarrer un projet <span>→</span>
+            </a>
+            <a class="button button-secondary" href="#services">
+              Découvrir nos services <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="network-scene" id="networkScene" aria-hidden="true">
+        <div class="network-glow"></div>
+        <div class="globe">
+          <div class="globe-grid globe-grid-a"></div>
+          <div class="globe-grid globe-grid-b"></div>
+        </div>
+        <canvas id="networkCanvas"></canvas>
+
+        <div class="network-label label-web"><i></i>Web</div>
+        <div class="network-label label-ai"><i></i>IA</div>
+        <div class="network-label label-network"><i></i>Réseaux</div>
+        <div class="network-label label-systems"><i></i>Systèmes</div>
+        <div class="network-label label-infra"><i></i>Infrastructure</div>
+      </div>
+
+      <div class="container hero-footer">
+        <div class="hero-tags">
+          <span>Sites web</span>
+          <span>IA & automatisation</span>
+          <span>Systèmes & réseaux</span>
+          <span>Infrastructure</span>
+        </div>
+        <a class="scroll-cue" href="#services">
+          <span class="scroll-line"></span>
+          Scroll pour explorer
+        </a>
+      </div>
+    </section>
+
+    <section class="services section" id="services">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">NOS EXPERTISES</p>
+            <h2>Une approche globale,<br />de l'idée à la production.</h2>
+          </div>
+          <p class="section-description">
+            Développement, intelligence artificielle et ingénierie système :
+            une vision complète pour construire des solutions fiables,
+            sécurisées et évolutives.
+          </p>
+        </div>
+
+        <div class="service-grid">
+          <article class="service-card reveal">
+            <div class="service-icon">⌘</div>
+            <h3>Création de sites web</h3>
+            <p>Sites vitrines, e-commerce et applications web sur mesure.</p>
+            <ul>
+              <li>Design moderne</li>
+              <li>Développement sur mesure</li>
+              <li>Performance & SEO</li>
+            </ul>
+            <a href="#contact" class="card-arrow">↗</a>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">◈</div>
+            <h3>Intelligence Artificielle</h3>
+            <p>Automatisation, agents IA et traitement intelligent des données.</p>
+            <ul>
+              <li>Agents intelligents</li>
+              <li>IA générative</li>
+              <li>Intégration métier</li>
+            </ul>
+            <a href="#contact" class="card-arrow">↗</a>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">⌁</div>
+            <h3>Systèmes & Réseaux</h3>
+            <p>Administration, architecture, sécurité et supervision.</p>
+            <ul>
+              <li>Windows / Linux</li>
+              <li>Réseaux & VPN</li>
+              <li>Monitoring</li>
+            </ul>
+            <a href="#contact" class="card-arrow">↗</a>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">▣</div>
+            <h3>Infrastructure</h3>
+            <p>Serveurs, cloud, virtualisation et déploiement.</p>
+            <ul>
+              <li>Cloud & serveurs</li>
+              <li>Docker & orchestration</li>
+              <li>Haute disponibilité</li>
+            </ul>
+            <a href="#contact" class="card-arrow">↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="approach section" id="approach">
+      <div class="approach-orb" aria-hidden="true"></div>
+      <div class="container approach-grid">
+        <div class="reveal">
+          <p class="eyebrow">NOTRE APPROCHE</p>
+          <h2>Construire le système,<br />pas seulement l'interface.</h2>
+        </div>
+
+        <div class="approach-copy reveal">
+          <p>
+            Un produit digital performant repose sur plusieurs couches :
+            expérience utilisateur, application, données, serveurs et réseau.
+            YDRAx intervient sur l'ensemble de cette chaîne.
+          </p>
+
+          <div class="process">
+            <div class="process-step">
+              <span>01</span>
+              <strong>Comprendre</strong>
+              <small>Besoin · objectifs · contraintes</small>
+            </div>
+            <div class="process-step">
+              <span>02</span>
+              <strong>Concevoir</strong>
+              <small>Architecture · UX · technologie</small>
+            </div>
+            <div class="process-step">
+              <span>03</span>
+              <strong>Construire</strong>
+              <small>Développement · intégration · tests</small>
+            </div>
+            <div class="process-step">
+              <span>04</span>
+              <strong>Déployer</strong>
+              <small>Infrastructure · sécurité · monitoring</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects section" id="projects">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">RÉALISATIONS</p>
+            <h2>Des projets pensés<br />pour la vraie vie.</h2>
+          </div>
+          <p class="section-description">
+            Une sélection de projets peut prendre place ici : plateformes web,
+            automatisations, architectures techniques ou infrastructures.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card project-large reveal">
+            <div class="project-visual visual-web">
+              <span class="visual-window"></span>
+              <span class="visual-line line-1"></span>
+              <span class="visual-line line-2"></span>
+              <span class="visual-line line-3"></span>
+            </div>
+            <div class="project-info">
+              <p>WEB · APPLICATION</p>
+              <h3>Projet digital sur mesure</h3>
+              <span>Découvrir le projet →</span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-ai">
+              <div class="ai-core">AI</div>
+              <div class="ai-orbit orbit-1"></div>
+              <div class="ai-orbit orbit-2"></div>
+            </div>
+            <div class="project-info">
+              <p>IA · AUTOMATISATION</p>
+              <h3>Système intelligent</h3>
+              <span>Découvrir le projet →</span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-infra">
+              <div class="server-rack">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="infra-node node-a"></div>
+              <div class="infra-node node-b"></div>
+              <div class="infra-node node-c"></div>
+            </div>
+            <div class="project-info">
+              <p>INFRA · RÉSEAUX</p>
+              <h3>Architecture technique</h3>
+              <span>Découvrir le projet →</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section" id="contact">
+      <div class="container">
+        <div class="cta-box reveal">
+          <div class="cta-content">
+            <p class="eyebrow">PRÊT À CONSTRUIRE ?</p>
+            <h2>Parlons de votre projet.</h2>
+            <p>
+              Expliquez-nous votre besoin. Nous analysons le projet et
+              revenons vers vous avec une proposition adaptée.
+            </p>
+            <a class="button button-primary" href="mailto:contact@ydrax.fr">
+              Démarrer une discussion <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-top">
+      <div>
+        <div class="footer-logo">YDRA<span>x</span></div>
+        <p>Build. Connect. Scale.</p>
+      </div>
+
+      <nav class="footer-links">
+        <a href="#home">Accueil</a>
+        <a href="#services">Services</a>
+        <a href="#approach">Approche</a>
+        <a href="#projects">Réalisations</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 YDRAx. Tous droits réservés.</span>
+      <span>Des systèmes. Un impact.</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
