@@ -1,6 +1,7 @@
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact.ydrax@gmail.com";
 const FROM = process.env.MAIL_FROM || "YDRAx <onboarding@resend.dev>";
+const FROM_NOREPLY = process.env.MAIL_FROM_NOREPLY || FROM;
 
 const hits = new Map();
 
@@ -23,6 +24,37 @@ function escapeHtml(value) {
   );
 }
 
+function shell(bodyHtml) {
+  return `<!doctype html><html lang="fr"><body style="margin:0;padding:32px 16px;background:#030609;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif">
+    <div style="max-width:560px;margin:0 auto;background:#080d13;border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden">
+      <div style="padding:26px 30px;border-bottom:1px solid rgba(255,255,255,.07)">
+        <div style="color:#f3f6f9;font-size:18px;letter-spacing:.23em;font-weight:500">YDRA<span style="opacity:.43">x</span></div>
+      </div>
+      <div style="padding:30px;color:#c8d1da;font-size:14px;line-height:1.65">${bodyHtml}</div>
+    </div>
+  </body></html>`;
+}
+
+/** Instant acknowledgement so the sender knows the message landed. */
+function acknowledgement({ name, type, message }) {
+  return shell(`
+    <h1 style="margin:0 0 14px;color:#f3f6f9;font-size:20px;font-weight:500">Votre message a bien été reçu</h1>
+    <p style="margin:0 0 12px">Bonjour ${escapeHtml(name)},</p>
+    <p style="margin:0 0 12px">
+      Merci pour votre demande concernant <strong style="color:#eef3f8">${escapeHtml(type)}</strong>.
+      Elle nous est bien parvenue et sera traitée dans les plus brefs délais.
+    </p>
+    <p style="margin:0 0 18px">Nous revenons vers vous très rapidement avec une première réponse.</p>
+
+    <div style="padding:14px 16px;border-left:2px solid rgba(155,210,255,.4);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;white-space:pre-wrap;color:#95a1ad;font-size:12.5px">${escapeHtml(message)}</div>
+
+    <p style="margin:22px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);color:#5d6874;font-size:11px;line-height:1.6">
+      Cet email est automatique, merci de ne pas y répondre.<br />
+      Pour nous joindre : <a href="mailto:${ADMIN_EMAIL}" style="color:#9bd2ff">${ADMIN_EMAIL}</a>
+    </p>
+  `);
+}
+
 function template({ name, email, phone, type, budget, message }) {
   const rows = [
     ["Nom", name],
@@ -39,18 +71,29 @@ function template({ name, email, phone, type, budget, message }) {
     )
     .join("");
 
-  return `<!doctype html><html lang="fr"><body style="margin:0;padding:32px 16px;background:#030609;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif">
-    <div style="max-width:560px;margin:0 auto;background:#080d13;border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden">
-      <div style="padding:26px 30px;border-bottom:1px solid rgba(255,255,255,.07)">
-        <div style="color:#f3f6f9;font-size:18px;letter-spacing:.23em;font-weight:500">YDRA<span style="opacity:.43">x</span></div>
-      </div>
-      <div style="padding:30px;color:#c8d1da;font-size:14px;line-height:1.65">
-        <h1 style="margin:0 0 4px;color:#f3f6f9;font-size:20px;font-weight:500">Nouvelle demande de contact</h1>
-        <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows}</table>
-        <div style="padding:14px 16px;border-left:2px solid rgba(155,210,255,.4);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;white-space:pre-wrap;color:#dce4ec">${escapeHtml(message)}</div>
-      </div>
-    </div>
-  </body></html>`;
+  return shell(`
+    <h1 style="margin:0 0 4px;color:#f3f6f9;font-size:20px;font-weight:500">Nouvelle demande de contact</h1>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows}</table>
+    <div style="padding:14px 16px;border-left:2px solid rgba(155,210,255,.4);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;white-space:pre-wrap;color:#dce4ec">${escapeHtml(message)}</div>
+  `);
+}
+
+async function send(payload) {
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) return { ok: false, error: `${response.status} ${await response.text()}` };
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: String(error) };
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -83,32 +126,32 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: FROM,
-        to: [ADMIN_EMAIL],
-        reply_to: email,
-        subject: `Contact YDRAx — ${name} — ${type}`,
-        html: template({ name, email, phone, type, budget, message }),
-      }),
+  const notification = await send({
+    from: FROM,
+    to: [ADMIN_EMAIL],
+    reply_to: email,
+    subject: `Contact YDRAx — ${name} — ${type}`,
+    html: template({ name, email, phone, type, budget, message }),
+  });
+
+  if (!notification.ok) {
+    console.error("resend notification", notification.error);
+    return res.status(502).json({
+      error: "L'envoi a échoué. Écrivez-nous à contact.ydrax@gmail.com.",
     });
-
-    if (!response.ok) {
-      console.error("resend", response.status, await response.text());
-      return res.status(502).json({
-        error: "L'envoi a échoué. Écrivez-nous à contact.ydrax@gmail.com.",
-      });
-    }
-
-    return res.status(200).json({ ok: true });
-  } catch (error) {
-    console.error("contact", error);
-    return res.status(500).json({ error: "Erreur serveur. Réessayez dans un instant." });
   }
+
+  // Automatic receipt for the sender. Best effort: the request already
+  // succeeded, and Resend's shared sender cannot reach third parties until
+  // a domain is verified.
+  const receipt = await send({
+    from: FROM_NOREPLY,
+    to: [email],
+    subject: "Votre message a bien été reçu — YDRAx",
+    html: acknowledgement({ name, type, message }),
+  });
+
+  if (!receipt.ok) console.error("resend receipt", receipt.error);
+
+  return res.status(200).json({ ok: true, receiptSent: receipt.ok });
 };

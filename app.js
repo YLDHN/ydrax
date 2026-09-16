@@ -141,7 +141,12 @@ if (contactForm) {
       }
 
       contactForm.reset();
-      setNotice("ok", "Message envoyé. Nous revenons vers vous très vite.");
+      setNotice(
+        "ok",
+        result.receiptSent
+          ? "Message envoyé. Un accusé de réception vient de vous être envoyé par email."
+          : "Message envoyé. Nous revenons vers vous très vite."
+      );
     } catch (error) {
       setNotice("err", "Connexion impossible. Écrivez-nous à contact.ydrax@gmail.com.");
     } finally {
