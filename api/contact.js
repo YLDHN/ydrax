@@ -1,7 +1,6 @@
+const { sendMail, senders, isConfigured, ADMIN_EMAIL } = require("./_mail.js");
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact.ydrax@gmail.com";
-const FROM = process.env.MAIL_FROM || "YDRAx <onboarding@resend.dev>";
-const FROM_NOREPLY = process.env.MAIL_FROM_NOREPLY || FROM;
 
 const hits = new Map();
 
@@ -78,24 +77,6 @@ function template({ name, email, phone, type, budget, message }) {
   `);
 }
 
-async function send(payload) {
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) return { ok: false, error: `${response.status} ${await response.text()}` };
-    return { ok: true };
-  } catch (error) {
-    return { ok: false, error: String(error) };
-  }
-}
-
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Méthode non autorisée" });
 
@@ -120,38 +101,39 @@ module.exports = async function handler(req, res) {
   if (!EMAIL_RE.test(email)) return res.status(400).json({ error: "Adresse email invalide." });
   if (message.length < 10) return res.status(400).json({ error: "Décrivez votre besoin en quelques mots." });
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!isConfigured()) {
     return res.status(503).json({
       error: "L'envoi n'est pas encore activé. Écrivez-nous directement à contact.ydrax@gmail.com.",
     });
   }
 
-  const notification = await send({
-    from: FROM,
-    to: [ADMIN_EMAIL],
-    reply_to: email,
+  const from = senders();
+
+  const notification = await sendMail({
+    from: from.standard,
+    to: ADMIN_EMAIL,
+    replyTo: email,
     subject: `Contact YDRAx — ${name} — ${type}`,
     html: template({ name, email, phone, type, budget, message }),
   });
 
   if (!notification.ok) {
-    console.error("resend notification", notification.error);
+    console.error("contact notification", notification.error);
     return res.status(502).json({
       error: "L'envoi a échoué. Écrivez-nous à contact.ydrax@gmail.com.",
     });
   }
 
-  // Automatic receipt for the sender. Best effort: the request already
-  // succeeded, and Resend's shared sender cannot reach third parties until
-  // a domain is verified.
-  const receipt = await send({
-    from: FROM_NOREPLY,
-    to: [email],
+  // Best effort: the request already succeeded, so a mail provider limit
+  // must never cost us the lead.
+  const receipt = await sendMail({
+    from: from.noReply,
+    to: email,
     subject: "Votre message a bien été reçu — YDRAx",
     html: acknowledgement({ name, type, message }),
   });
 
-  if (!receipt.ok) console.error("resend receipt", receipt.error);
+  if (!receipt.ok) console.error("contact receipt", receipt.error);
 
   return res.status(200).json({ ok: true, receiptSent: receipt.ok });
 };

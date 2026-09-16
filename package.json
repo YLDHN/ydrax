@@ -1,0 +1,9 @@
+{
+  "name": "ydrax-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site vitrine YDRAx (statique) et sa fonction de contact.",
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
