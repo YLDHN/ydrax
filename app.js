@@ -81,6 +81,13 @@ const contactForm = document.getElementById("contactForm");
 if (contactForm) {
   const notice = document.getElementById("contactNotice");
   const submit = document.getElementById("contactSubmit");
+  const success = document.getElementById("contactSuccess");
+
+  document.getElementById("contactAgain").addEventListener("click", () => {
+    success.hidden = true;
+    contactForm.hidden = false;
+    contactForm.querySelector("input").focus();
+  });
   const fields = {
     name: document.getElementById("cf-name"),
     email: document.getElementById("cf-email"),
@@ -141,12 +148,10 @@ if (contactForm) {
       }
 
       contactForm.reset();
-      setNotice(
-        "ok",
-        result.receiptSent
-          ? "Message envoyé. Un accusé de réception vient de vous être envoyé par email."
-          : "Message envoyé. Nous revenons vers vous très vite."
-      );
+      setNotice("", "");
+      contactForm.hidden = true;
+      success.hidden = false;
+      success.scrollIntoView({ behavior: "smooth", block: "center" });
     } catch (error) {
       setNotice("err", "Connexion impossible. Écrivez-nous à contact.ydrax@gmail.com.");
     } finally {

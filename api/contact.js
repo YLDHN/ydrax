@@ -1,4 +1,4 @@
-const { sendMail, senders, isConfigured, ADMIN_EMAIL } = require("./_mail.js");
+const { sendMail, isConfigured, ADMIN_EMAIL } = require("./_mail.js");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -32,26 +32,6 @@ function shell(bodyHtml) {
       <div style="padding:30px;color:#c8d1da;font-size:14px;line-height:1.65">${bodyHtml}</div>
     </div>
   </body></html>`;
-}
-
-/** Instant acknowledgement so the sender knows the message landed. */
-function acknowledgement({ name, type, message }) {
-  return shell(`
-    <h1 style="margin:0 0 14px;color:#f3f6f9;font-size:20px;font-weight:500">Votre message a bien été reçu</h1>
-    <p style="margin:0 0 12px">Bonjour ${escapeHtml(name)},</p>
-    <p style="margin:0 0 12px">
-      Merci pour votre demande concernant <strong style="color:#eef3f8">${escapeHtml(type)}</strong>.
-      Elle nous est bien parvenue et sera traitée dans les plus brefs délais.
-    </p>
-    <p style="margin:0 0 18px">Nous revenons vers vous très rapidement avec une première réponse.</p>
-
-    <div style="padding:14px 16px;border-left:2px solid rgba(155,210,255,.4);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;white-space:pre-wrap;color:#95a1ad;font-size:12.5px">${escapeHtml(message)}</div>
-
-    <p style="margin:22px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);color:#5d6874;font-size:11px;line-height:1.6">
-      Cet email est automatique, merci de ne pas y répondre.<br />
-      Pour nous joindre : <a href="mailto:${ADMIN_EMAIL}" style="color:#9bd2ff">${ADMIN_EMAIL}</a>
-    </p>
-  `);
 }
 
 function template({ name, email, phone, type, budget, message }) {
@@ -107,10 +87,7 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const from = senders();
-
   const notification = await sendMail({
-    from: from.standard,
     to: ADMIN_EMAIL,
     replyTo: email,
     subject: `Contact YDRAx — ${name} — ${type}`,
@@ -124,16 +101,5 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  // Best effort: the request already succeeded, so a mail provider limit
-  // must never cost us the lead.
-  const receipt = await sendMail({
-    from: from.noReply,
-    to: email,
-    subject: "Votre message a bien été reçu — YDRAx",
-    html: acknowledgement({ name, type, message }),
-  });
-
-  if (!receipt.ok) console.error("contact receipt", receipt.error);
-
-  return res.status(200).json({ ok: true, receiptSent: receipt.ok });
+  return res.status(200).json({ ok: true, deliveredTo: ADMIN_EMAIL });
 };

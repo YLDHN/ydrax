@@ -21,14 +21,15 @@ function smtpTransport() {
   return transporter;
 }
 
-function senders() {
-  const account = process.env.SMTP_USER || ADMIN_EMAIL;
-  return {
-    // Gmail rewrites the From header to the authenticated account, so the
-    // "no reply" intent lives in the display name and the body, not the address.
-    standard: process.env.MAIL_FROM || `YDRAx <${account}>`,
-    noReply: process.env.MAIL_FROM_NOREPLY || `YDRAx — ne pas répondre <${account}>`,
-  };
+/**
+ * Each transport only accepts a sender it has authorised: SMTP the account
+ * that authenticated, Resend its shared address until a domain is verified.
+ * MAIL_FROM overrides both once a real sender identity exists.
+ */
+function sender(viaSmtp) {
+  if (process.env.MAIL_FROM) return process.env.MAIL_FROM;
+  if (viaSmtp) return `YDRAx <${process.env.SMTP_USER}>`;
+  return "YDRAx <onboarding@resend.dev>";
 }
 
 function isConfigured() {
@@ -36,12 +37,12 @@ function isConfigured() {
 }
 
 /** Sends through SMTP when configured, otherwise Resend. Never throws. */
-async function sendMail({ from, to, subject, html, replyTo }) {
+async function sendMail({ to, subject, html, replyTo }) {
   const smtp = smtpTransport();
 
   if (smtp) {
     try {
-      await smtp.sendMail({ from, to, subject, html, replyTo });
+      await smtp.sendMail({ from: sender(true), to, subject, html, replyTo });
       return { ok: true, via: "smtp" };
     } catch (error) {
       return { ok: false, via: "smtp", error: String(error) };
@@ -58,7 +59,7 @@ async function sendMail({ from, to, subject, html, replyTo }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from,
+        from: sender(false),
         to: Array.isArray(to) ? to : [to],
         subject,
         html,
@@ -75,4 +76,4 @@ async function sendMail({ from, to, subject, html, replyTo }) {
   }
 }
 
-module.exports = { sendMail, senders, isConfigured, ADMIN_EMAIL };
+module.exports = { sendMail, isConfigured, ADMIN_EMAIL };
