@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#030609" />
+
+  <title>Contact — Parlons de votre projet | YDRAx</title>
+  <meta name="description" content="Décrivez-nous votre besoin : réponse sous 48 h avec une proposition adaptée. Devis gratuit, sans engagement, détaillé ligne par ligne." />
+  <link rel="canonical" href="https://ydrax.vercel.app/contact" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="YDRAx" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="YDRAx" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:url" content="https://ydrax.vercel.app/contact" />
+  <meta property="og:title" content="Contact — Parlons de votre projet | YDRAx" />
+  <meta property="og:description" content="Décrivez-nous votre besoin : réponse sous 48 h avec une proposition adaptée. Devis gratuit, sans engagement, détaillé ligne par ligne." />
+  <meta property="og:image" content="https://ydrax.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="YDRAx — Des idées à des systèmes performants." />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Contact — Parlons de votre projet | YDRAx" />
+  <meta name="twitter:description" content="Décrivez-nous votre besoin : réponse sous 48 h avec une proposition adaptée. Devis gratuit, sans engagement, détaillé ligne par ligne." />
+  <meta name="twitter:image" content="https://ydrax.vercel.app/og-image.png" />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script>document.documentElement.classList.add("js");</script>
+</head><body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="YDRAx accueil">YDRA<span>x</span></a>
+
+      <nav class="nav-links" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/services">Services</a>
+        <a href="/realisations">Réalisations</a>
+        <a href="/tarifs">Tarifs</a>
+        <a class="active" aria-current="page" href="/contact">Contact</a>
+      </nav>
+
+      <a class="nav-cta" href="/contact">Discutons <span>↗</span></a>
+
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        type="button"
+        aria-label="Ouvrir le menu"
+        aria-expanded="false"
+        aria-controls="mobileMenu"
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <nav aria-label="Navigation mobile">
+      <a href="/">Accueil</a>
+      <a href="/services">Services</a>
+      <a href="/realisations">Réalisations</a>
+      <a href="/tarifs">Tarifs</a>
+      <a aria-current="page" href="/contact">Contact</a>
+    </nav>
+    <a class="button button-primary mobile-menu-cta" href="/tarifs#simulateur">
+      Estimer mon projet <span>→</span>
+    </a>
+  </div>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">CONTACT</p>
+        <h1>Parlons de<br />votre <strong>projet</strong>.</h1>
+        <p class="page-head-description">
+          Expliquez-nous votre besoin. Nous analysons le projet et revenons
+          vers vous sous 48 h avec une proposition adaptée.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="formulaire" style="padding-top:10px">
+      <div class="container contact-layout">
+        <div class="contact-panel reveal">
+          <div class="form-success" id="contactSuccess" hidden>
+            <div class="form-success-mark" aria-hidden="true">✓</div>
+            <h3>Votre message est bien arrivé</h3>
+            <p>
+              Il vient d'être remis dans la boîte de réception de YDRAx.
+              Nous le traitons dans les plus brefs délais et revenons vers vous rapidement.
+            </p>
+            <button type="button" class="button button-secondary" id="contactAgain">
+              Envoyer un autre message
+            </button>
+          </div>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <fieldset class="chip-group">
+              <legend>Votre projet concerne</legend>
+              <div class="chips" role="radiogroup" aria-label="Type de projet">
+                <label class="chip"><input type="radio" name="type" value="Site web" checked /><span>Site web</span></label>
+                <label class="chip"><input type="radio" name="type" value="Intelligence artificielle" /><span>IA</span></label>
+                <label class="chip"><input type="radio" name="type" value="Systèmes &amp; réseaux" /><span>Systèmes &amp; réseaux</span></label>
+                <label class="chip"><input type="radio" name="type" value="Infrastructure" /><span>Infrastructure</span></label>
+                <label class="chip"><input type="radio" name="type" value="Autre / je ne sais pas encore" /><span>Autre</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="chip-group">
+              <legend>Budget envisagé <span>(facultatif)</span></legend>
+              <div class="chips" role="radiogroup" aria-label="Budget envisagé">
+                <label class="chip"><input type="radio" name="budget" value="< 2 000 €" /><span>&lt; 2 000 €</span></label>
+                <label class="chip"><input type="radio" name="budget" value="2 000 – 5 000 €" /><span>2–5 k€</span></label>
+                <label class="chip"><input type="radio" name="budget" value="5 000 – 15 000 €" /><span>5–15 k€</span></label>
+                <label class="chip"><input type="radio" name="budget" value="> 15 000 €" /><span>&gt; 15 k€</span></label>
+                <label class="chip"><input type="radio" name="budget" value="À définir ensemble" /><span>À définir</span></label>
+              </div>
+            </fieldset>
+
+            <div class="form-grid">
+              <div class="form-field" id="cf-name">
+                <label for="cf-name-input">Nom complet</label>
+                <input id="cf-name-input" name="name" type="text" autocomplete="name" placeholder="Jean Dupont" required />
+                <small class="form-err">Merci d'indiquer votre nom.</small>
+              </div>
+
+              <div class="form-field" id="cf-email">
+                <label for="cf-email-input">Email</label>
+                <input id="cf-email-input" name="email" type="email" autocomplete="email" placeholder="jean@entreprise.fr" required />
+                <small class="form-err">Adresse email invalide.</small>
+              </div>
+            </div>
+
+            <div class="form-field" id="cf-phone">
+              <label for="cf-phone-input">Téléphone <span>(facultatif)</span></label>
+              <input id="cf-phone-input" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" />
+            </div>
+
+            <div class="form-field" id="cf-message">
+              <label for="cf-message-input">Décrivez votre besoin</label>
+              <textarea id="cf-message-input" name="message" placeholder="Objectifs, contexte, délais souhaités…" required></textarea>
+              <small class="form-err">Décrivez votre besoin en quelques mots.</small>
+            </div>
+
+            <div class="form-hp" aria-hidden="true">
+              <label for="cf-company">Société</label>
+              <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="form-notice" id="contactNotice" role="status" aria-live="polite"></div>
+
+            <button class="button button-primary" type="submit" id="contactSubmit">
+              Envoyer la demande <span>→</span>
+            </button>
+
+            <p class="form-alt">
+              Ou écrivez directement à
+              <a href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
+            </p>
+          </form>
+        </div>
+
+        <div class="contact-aside">
+          <div class="contact-card reveal">
+            <h3>Par email</h3>
+            <p>Réponse sous 48 h, du lundi au vendredi.</p>
+            <a class="big" href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
+          </div>
+
+          <div class="contact-card reveal">
+            <h3>Un site web en tête ?</h3>
+            <p>Composez votre projet dans le simulateur : le prix se calcule en direct et vous pouvez nous envoyer l'estimation directement.</p>
+            <a class="button button-secondary" href="/tarifs#simulateur" style="margin-top:16px">Ouvrir le simulateur <span>→</span></a>
+          </div>
+
+          <div class="contact-card reveal">
+            <h3>Comment ça se passe ?</h3>
+            <div class="process">
+              <div class="process-step"><span>01</span><strong>Comprendre</strong><small>Échange gratuit, choix du forfait et des options</small></div>
+              <div class="process-step"><span>02</span><strong>Concevoir</strong><small>Maquettes validées ensemble avant développement</small></div>
+              <div class="process-step"><span>03</span><strong>Construire</strong><small>Développement, tests, point d'avancement chaque semaine</small></div>
+              <div class="process-step"><span>04</span><strong>Déployer</strong><small>Mise en ligne, formation, 30 jours de corrections</small></div>
+            </div>
+          </div>
+
+          <div class="contact-card reveal">
+            <h3>Modalités</h3>
+            <ul>
+              <li>Devis gratuit, sans engagement, valable 30 jours, détaillé ligne par ligne.</li>
+              <li>30 % à la commande, 40 % à la validation des maquettes, solde à la livraison. Paiement en 2 ou 3 fois sans frais possible.</li>
+              <li>Vous restez propriétaire du site, du code, des contenus et du domaine.</li>
+              <li>Tarifs indicatifs hors taxes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-top">
+      <div>
+        <div class="footer-logo">YDRA<span>x</span></div>
+        <p>Build. Connect. Scale.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Pied de page">
+        <a href="/">Accueil</a>
+        <a href="/services">Services</a>
+        <a href="/realisations">Réalisations</a>
+        <a href="/tarifs">Tarifs</a>
+        <a href="/contact">Contact</a>
+        <a href="/grille-tarifaire-ydrax-2026.pdf" download>Grille tarifaire (PDF)</a>
+        <a href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
+      </nav>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 YDRAx. Tous droits réservés.</span>
+      <span>Des systèmes. Un impact.</span>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
