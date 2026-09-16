@@ -16,7 +16,7 @@
   <meta property="og:locale" content="fr_FR" />
   <meta property="og:url" content="https://ydrax.vercel.app/" />
   <meta property="og:title" content="YDRAx — Sites web, IA, systèmes &amp; infrastructure" />
-  <meta property="og:description" content="De l'idée à la production : sites web sur mesure, intelligence artificielle, systèmes &amp; réseaux, infrastructure." />
+  <meta property="og:description" content="YDRAx conçoit, développe et déploie des sites web sur mesure, des solutions d'intelligence artificielle, des systèmes &amp; réseaux et des infrastructures fiables. De l'idée à la production." />
   <meta property="og:image" content="https://ydrax.vercel.app/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -24,7 +24,7 @@
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="YDRAx — Sites web, IA, systèmes &amp; infrastructure" />
-  <meta name="twitter:description" content="De l'idée à la production : sites web sur mesure, intelligence artificielle, systèmes &amp; réseaux, infrastructure." />
+  <meta name="twitter:description" content="YDRAx conçoit, développe et déploie des sites web sur mesure, des solutions d'intelligence artificielle, des systèmes &amp; réseaux et des infrastructures fiables. De l'idée à la production." />
   <meta name="twitter:image" content="https://ydrax.vercel.app/og-image.png" />
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -35,7 +35,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 
   <script type="application/ld+json">
   {
@@ -50,11 +50,12 @@
     "description": "YDRAx conçoit, développe et déploie des sites web sur mesure, des solutions d'intelligence artificielle, des systèmes & réseaux et des infrastructures fiables.",
     "areaServed": { "@type": "Country", "name": "France" },
     "availableLanguage": ["fr", "en"],
+    "priceRange": "€€",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Services YDRAx",
       "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Création de sites web", "description": "Sites vitrines, e-commerce et applications web sur mesure." } },
+        { "@type": "Offer", "url": "https://ydrax.vercel.app/tarifs", "itemOffered": { "@type": "Service", "name": "Création de sites web", "description": "Sites vitrines, e-commerce et applications web sur mesure." } },
         { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Intelligence Artificielle", "description": "Automatisation, agents IA et traitement intelligent des données." } },
         { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Systèmes & Réseaux", "description": "Administration, architecture, sécurité et supervision." } },
         { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Infrastructure", "description": "Serveurs, cloud, virtualisation et déploiement." } }
@@ -63,8 +64,6 @@
   }
   </script>
 
-  <script>document.documentElement.classList.add("js");</script>
-
   <script type="importmap">
     {
       "imports": {
@@ -72,24 +71,25 @@
       }
     }
   </script>
-</head>
-<body>
+
+  <script>document.documentElement.classList.add("js");</script>
+</head><body>
   <a class="skip-link" href="#main">Aller au contenu</a>
   <div class="noise" aria-hidden="true"></div>
 
   <header class="navbar" id="navbar">
     <div class="nav-inner">
-      <a class="logo" href="#home" aria-label="YDRAx accueil">YDRA<span>x</span></a>
+      <a class="logo" href="/" aria-label="YDRAx accueil">YDRA<span>x</span></a>
 
       <nav class="nav-links" aria-label="Navigation principale">
-        <a class="active" href="#home">Accueil</a>
-        <a href="#services">Services</a>
-        <a href="#approach">Approche</a>
-        <a href="#projects">Réalisations</a>
-        <a href="#contact">Contact</a>
+        <a class="active" aria-current="page" href="/">Accueil</a>
+        <a href="/services">Services</a>
+        <a href="/realisations">Réalisations</a>
+        <a href="/tarifs">Tarifs</a>
+        <a href="/contact">Contact</a>
       </nav>
 
-      <a class="nav-cta" href="#contact">Discutons <span>↗</span></a>
+      <a class="nav-cta" href="/contact">Discutons <span>↗</span></a>
 
       <button
         class="nav-toggle"
@@ -106,14 +106,14 @@
 
   <div class="mobile-menu" id="mobileMenu" hidden>
     <nav aria-label="Navigation mobile">
-      <a href="#home">Accueil</a>
-      <a href="#services">Services</a>
-      <a href="#approach">Approche</a>
-      <a href="#projects">Réalisations</a>
-      <a href="#contact">Contact</a>
+      <a aria-current="page" href="/">Accueil</a>
+      <a href="/services">Services</a>
+      <a href="/realisations">Réalisations</a>
+      <a href="/tarifs">Tarifs</a>
+      <a href="/contact">Contact</a>
     </nav>
-    <a class="button button-primary mobile-menu-cta" href="#contact">
-      Démarrer un projet <span>→</span>
+    <a class="button button-primary mobile-menu-cta" href="/tarifs#simulateur">
+      Estimer mon projet <span>→</span>
     </a>
   </div>
 
@@ -134,10 +134,10 @@
           </p>
 
           <div class="hero-actions">
-            <a class="button button-primary" href="#contact">
-              Démarrer un projet <span>→</span>
+            <a class="button button-primary" href="/tarifs#simulateur">
+              Estimer mon projet <span>→</span>
             </a>
-            <a class="button button-secondary" href="#services">
+            <a class="button button-secondary" href="/services">
               Découvrir nos services <span>→</span>
             </a>
           </div>
@@ -193,7 +193,7 @@
               <li>Développement sur mesure</li>
               <li>Performance & SEO</li>
             </ul>
-            <a href="#contact" class="card-arrow">↗</a>
+            <a href="/services#web" class="card-arrow" aria-label="Création de sites web : en savoir plus">↗</a>
           </article>
 
           <article class="service-card reveal">
@@ -205,7 +205,7 @@
               <li>IA générative</li>
               <li>Intégration métier</li>
             </ul>
-            <a href="#contact" class="card-arrow">↗</a>
+            <a href="/services#ia" class="card-arrow" aria-label="Intelligence artificielle : en savoir plus">↗</a>
           </article>
 
           <article class="service-card reveal">
@@ -217,7 +217,7 @@
               <li>Réseaux & VPN</li>
               <li>Monitoring</li>
             </ul>
-            <a href="#contact" class="card-arrow">↗</a>
+            <a href="/services#systemes" class="card-arrow" aria-label="Systèmes et réseaux : en savoir plus">↗</a>
           </article>
 
           <article class="service-card reveal">
@@ -229,200 +229,62 @@
               <li>Docker & orchestration</li>
               <li>Haute disponibilité</li>
             </ul>
-            <a href="#contact" class="card-arrow">↗</a>
+            <a href="/services#infrastructure" class="card-arrow" aria-label="Infrastructure : en savoir plus">↗</a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="approach section" id="approach">
-      <div class="approach-orb" aria-hidden="true"></div>
-      <div class="container approach-grid">
-        <div class="reveal">
-          <p class="eyebrow">NOTRE APPROCHE</p>
-          <h2>Construire le système,<br />pas seulement l'interface.</h2>
-        </div>
-
-        <div class="approach-copy reveal">
-          <p>
-            Un produit digital performant repose sur plusieurs couches :
-            expérience utilisateur, application, données, serveurs et réseau.
-            YDRAx intervient sur l'ensemble de cette chaîne.
-          </p>
-
-          <div class="process">
-            <div class="process-step">
-              <span>01</span>
-              <strong>Comprendre</strong>
-              <small>Besoin · objectifs · contraintes</small>
-            </div>
-            <div class="process-step">
-              <span>02</span>
-              <strong>Concevoir</strong>
-              <small>Architecture · UX · technologie</small>
-            </div>
-            <div class="process-step">
-              <span>03</span>
-              <strong>Construire</strong>
-              <small>Développement · intégration · tests</small>
-            </div>
-            <div class="process-step">
-              <span>04</span>
-              <strong>Déployer</strong>
-              <small>Infrastructure · sécurité · monitoring</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="projects section" id="projects">
+    <section class="pricing-teaser section" id="tarifs">
       <div class="container">
         <div class="section-heading reveal">
           <div>
-            <p class="eyebrow">RÉALISATIONS</p>
-            <h2>Des projets pensés<br />pour la vraie vie.</h2>
+            <p class="eyebrow">TARIFS</p>
+            <h2>Des forfaits clairs,<br />un prix que vous maîtrisez.</h2>
           </div>
           <p class="section-description">
-            Une sélection de projets peut prendre place ici : plateformes web,
-            automatisations, architectures techniques ou infrastructures.
+            Un forfait de base, un catalogue d'options à prix unitaire :
+            vous savez exactement ce que vous payez. Composez votre projet
+            et obtenez une estimation immédiate.
           </p>
         </div>
 
-        <div class="project-grid">
-          <article class="project-card project-large reveal">
-            <div class="project-visual visual-web">
-              <span class="visual-window"></span>
-              <span class="visual-line line-1"></span>
-              <span class="visual-line line-2"></span>
-              <span class="visual-line line-3"></span>
-            </div>
-            <div class="project-info">
-              <p>WEB · APPLICATION</p>
-              <h3>Projet digital sur mesure</h3>
-              <a class="project-link" href="#contact">En discuter <span aria-hidden="true">→</span></a>
-            </div>
-          </article>
+        <div class="teaser-grid">
+          <a class="teaser-card reveal" href="/tarifs?f=essentiel#simulateur">
+            <h3>Vitrine Essentiel</h3>
+            <p>Présenter votre activité en ligne, simplement et rapidement.</p>
+            <div class="teaser-price">890 €<small>HT · livraison sous 1 à 2 semaines</small></div>
+          </a>
+          <a class="teaser-card reveal" href="/tarifs?f=pro#simulateur">
+            <h3>Vitrine Pro</h3>
+            <p>Un site sur mesure qui vous démarque et que vous gérez vous-même.</p>
+            <div class="teaser-price">1 490 €<small>HT · livraison sous 2 à 3 semaines</small></div>
+          </a>
+          <a class="teaser-card reveal" href="/tarifs?f=dynamique#simulateur">
+            <h3>Site Dynamique</h3>
+            <p>Un site connecté à une base de données, avec espace privé et gestion de vos données.</p>
+            <div class="teaser-price"><em>à partir de</em>2 900 €<small>HT · livraison sous 3 à 5 semaines</small></div>
+          </a>
+        </div>
 
-          <article class="project-card reveal">
-            <div class="project-visual visual-ai">
-              <div class="ai-core">AI</div>
-              <div class="ai-orbit orbit-1"></div>
-              <div class="ai-orbit orbit-2"></div>
-            </div>
-            <div class="project-info">
-              <p>IA · AUTOMATISATION</p>
-              <h3>Système intelligent</h3>
-              <a class="project-link" href="#contact">En discuter <span aria-hidden="true">→</span></a>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-infra">
-              <div class="server-rack">
-                <span></span><span></span><span></span><span></span>
-              </div>
-              <div class="infra-node node-a"></div>
-              <div class="infra-node node-b"></div>
-              <div class="infra-node node-c"></div>
-            </div>
-            <div class="project-info">
-              <p>INFRA · RÉSEAUX</p>
-              <h3>Architecture technique</h3>
-              <a class="project-link" href="#contact">En discuter <span aria-hidden="true">→</span></a>
-            </div>
-          </article>
+        <div class="teaser-more reveal">
+          <span><strong>E-commerce à partir de 3 500 €</strong> et <strong>application sur mesure à partir de 5 000 €</strong> : composez votre projet option par option.</span>
+          <a class="button button-primary" href="/tarifs#simulateur">Ouvrir le simulateur <span>→</span></a>
         </div>
       </div>
     </section>
 
-    <section class="cta section" id="contact">
+    <section class="cta section">
       <div class="container">
         <div class="cta-box reveal">
           <div class="cta-content">
             <p class="eyebrow">PRÊT À CONSTRUIRE ?</p>
             <h2>Parlons de votre projet.</h2>
-            <p>
-              Expliquez-nous votre besoin. Nous analysons le projet et
-              revenons vers vous avec une proposition adaptée.
-            </p>
-
-            <div class="form-success" id="contactSuccess" hidden>
-              <div class="form-success-mark" aria-hidden="true">✓</div>
-              <h3>Votre message est bien arrivé</h3>
-              <p>
-                Il vient d'être remis dans la boîte de réception de YDRAx.
-                Nous le traitons dans les plus brefs délais et revenons vers vous rapidement.
-              </p>
-              <button type="button" class="button button-secondary" id="contactAgain">
-                Envoyer un autre message
-              </button>
+            <p>Expliquez-nous votre besoin. Nous analysons le projet et revenons vers vous sous 48 h avec une proposition adaptée.</p>
+            <div class="hero-actions" style="justify-content:center;flex-wrap:wrap">
+              <a class="button button-primary" href="/contact">Démarrer un projet <span>→</span></a>
+              <a class="button button-secondary" href="/realisations">Voir nos réalisations <span>→</span></a>
             </div>
-
-            <form class="contact-form" id="contactForm" novalidate>
-              <fieldset class="chip-group">
-                <legend>Votre projet concerne</legend>
-                <div class="chips" role="radiogroup" aria-label="Type de projet">
-                  <label class="chip"><input type="radio" name="type" value="Site web" checked /><span>Site web</span></label>
-                  <label class="chip"><input type="radio" name="type" value="Intelligence artificielle" /><span>IA</span></label>
-                  <label class="chip"><input type="radio" name="type" value="Systèmes &amp; réseaux" /><span>Systèmes &amp; réseaux</span></label>
-                  <label class="chip"><input type="radio" name="type" value="Infrastructure" /><span>Infrastructure</span></label>
-                  <label class="chip"><input type="radio" name="type" value="Autre / je ne sais pas encore" /><span>Autre</span></label>
-                </div>
-              </fieldset>
-
-              <fieldset class="chip-group">
-                <legend>Budget envisagé <span>(facultatif)</span></legend>
-                <div class="chips" role="radiogroup" aria-label="Budget envisagé">
-                  <label class="chip"><input type="radio" name="budget" value="< 2 000 €" /><span>&lt; 2 000 €</span></label>
-                  <label class="chip"><input type="radio" name="budget" value="2 000 – 5 000 €" /><span>2–5 k€</span></label>
-                  <label class="chip"><input type="radio" name="budget" value="5 000 – 15 000 €" /><span>5–15 k€</span></label>
-                  <label class="chip"><input type="radio" name="budget" value="> 15 000 €" /><span>&gt; 15 k€</span></label>
-                  <label class="chip"><input type="radio" name="budget" value="À définir ensemble" /><span>À définir</span></label>
-                </div>
-              </fieldset>
-
-              <div class="form-grid">
-                <div class="form-field" id="cf-name">
-                  <label for="cf-name-input">Nom complet</label>
-                  <input id="cf-name-input" name="name" type="text" autocomplete="name" placeholder="Jean Dupont" required />
-                  <small class="form-err">Merci d'indiquer votre nom.</small>
-                </div>
-
-                <div class="form-field" id="cf-email">
-                  <label for="cf-email-input">Email</label>
-                  <input id="cf-email-input" name="email" type="email" autocomplete="email" placeholder="jean@entreprise.fr" required />
-                  <small class="form-err">Adresse email invalide.</small>
-                </div>
-              </div>
-
-              <div class="form-field" id="cf-phone">
-                <label for="cf-phone-input">Téléphone <span>(facultatif)</span></label>
-                <input id="cf-phone-input" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" />
-              </div>
-
-              <div class="form-field" id="cf-message">
-                <label for="cf-message-input">Décrivez votre besoin</label>
-                <textarea id="cf-message-input" name="message" placeholder="Objectifs, contexte, délais souhaités…" required></textarea>
-                <small class="form-err">Décrivez votre besoin en quelques mots.</small>
-              </div>
-
-              <div class="form-hp" aria-hidden="true">
-                <label for="cf-company">Société</label>
-                <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
-              </div>
-
-              <div class="form-notice" id="contactNotice" role="status" aria-live="polite"></div>
-
-              <button class="button button-primary" type="submit" id="contactSubmit">
-                Envoyer la demande <span>→</span>
-              </button>
-
-              <p class="form-alt">
-                Ou écrivez directement à
-                <a href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
-              </p>
-            </form>
           </div>
         </div>
       </div>
@@ -436,12 +298,14 @@
         <p>Build. Connect. Scale.</p>
       </div>
 
-      <nav class="footer-links">
-        <a href="#home">Accueil</a>
-        <a href="#services">Services</a>
-        <a href="#approach">Approche</a>
-        <a href="#projects">Réalisations</a>
-        <a href="#contact">Contact</a>
+      <nav class="footer-links" aria-label="Pied de page">
+        <a href="/">Accueil</a>
+        <a href="/services">Services</a>
+        <a href="/realisations">Réalisations</a>
+        <a href="/tarifs">Tarifs</a>
+        <a href="/contact">Contact</a>
+        <a href="/grille-tarifaire-ydrax-2026.pdf" download>Grille tarifaire (PDF)</a>
+        <a href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
       </nav>
     </div>
 
@@ -451,7 +315,7 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
-  <script type="module" src="src/globe.js"></script>
+  <script src="/app.js"></script>
+  <script type="module" src="/src/globe.js"></script>
 </body>
 </html>

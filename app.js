@@ -56,24 +56,29 @@ const revealObserver = new IntersectionObserver(
 
 document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 
-const navLinks = [...document.querySelectorAll(".nav-links a")];
-const sections = [...document.querySelectorAll("main section[id]")];
-
-const sectionObserver = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach(link => link.classList.remove("active"));
-      const active = navLinks.find(
-        link => link.getAttribute("href") === `#${entry.target.id}`
-      );
-      if (active) active.classList.add("active");
-    });
-  },
-  { threshold: .45 }
+/* Active nav link: static per page (set in the HTML). Only single-page
+   anchor menus need the scroll-driven highlight below. */
+const navLinks = [...document.querySelectorAll(".nav-links a")].filter(link =>
+  link.getAttribute("href").startsWith("#")
 );
 
-sections.forEach(section => sectionObserver.observe(section));
+if (navLinks.length) {
+  const sections = [...document.querySelectorAll("main section[id]")];
+  const sectionObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => link.classList.remove("active"));
+        const active = navLinks.find(
+          link => link.getAttribute("href") === `#${entry.target.id}`
+        );
+        if (active) active.classList.add("active");
+      });
+    },
+    { threshold: .45 }
+  );
+  sections.forEach(section => sectionObserver.observe(section));
+}
 
 /* CONTACT FORM */
 const contactForm = document.getElementById("contactForm");
