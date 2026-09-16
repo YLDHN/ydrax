@@ -13,6 +13,9 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Author `display` rules outrank the UA stylesheet, so [hidden] needs to win
+   explicitly — otherwise a hidden fixed overlay still swallows every click. */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
   min-width: 320px;
@@ -659,6 +662,100 @@ body.menu-open { overflow: hidden; }
   transform: rotate(-7deg);
 }
 .cta-content { position: relative; z-index: 2; max-width: 650px; padding: 35px; }
+
+/* CONTACT FORM */
+.contact-form { margin-top: 34px; text-align: left; }
+.chip-group { margin-bottom: 22px; border: 0; }
+.chip-group legend {
+  margin-bottom: 11px;
+  padding: 0;
+  color: #b9c3cd;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+.chip-group legend span { color: var(--muted-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; }
+.chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.chip span {
+  display: block;
+  padding: 10px 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.02);
+  color: #9aa5b1;
+  font-size: 12px;
+  transition: border-color .25s ease, background .25s ease, color .25s ease;
+}
+.chip input:hover + span { border-color: var(--line-strong); color: #dfe7ee; }
+.chip input:checked + span {
+  border-color: rgba(155,210,255,.55);
+  background: rgba(90,165,235,.14);
+  color: #fff;
+}
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { margin-bottom: 16px; }
+.form-field label { display: block; margin-bottom: 7px; color: #b9c3cd; font-size: 11px; }
+.form-field label span { color: var(--muted-2); }
+.form-field input, .form-field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 15px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.028);
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color .25s ease, background .25s ease;
+}
+.form-field textarea { min-height: 116px; resize: vertical; line-height: 1.65; }
+.form-field input::placeholder, .form-field textarea::placeholder { color: #4d5863; }
+.form-field input:focus, .form-field textarea:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  background: rgba(255,255,255,.05);
+}
+.form-field.invalid input, .form-field.invalid textarea { border-color: rgba(255,143,143,.6); }
+.form-err { display: none; margin-top: 6px; color: #ff9c9c; font-size: 11px; }
+.form-field.invalid .form-err { display: block; }
+.form-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-notice { margin: 4px 0 16px; }
+.form-notice div {
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  text-align: left;
+}
+.form-notice .ok { border: 1px solid rgba(110,231,168,.32); background: rgba(110,231,168,.08); color: #b7f0d2; }
+.form-notice .err { border: 1px solid rgba(255,143,143,.32); background: rgba(255,143,143,.07); color: #ffc4c4; }
+
+.contact-form .button { width: 100%; }
+.contact-form .button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.form-alt { margin-top: 16px; color: var(--muted-2); font-size: 11px; text-align: center; }
+.form-alt a { color: var(--accent); }
+
+.form-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,.25);
+  border-top-color: #05080b;
+  border-radius: 50%;
+  animation: formSpin .7s linear infinite;
+}
+@keyframes formSpin { to { transform: rotate(360deg); } }
+
+@media (max-width: 560px) {
+  .form-grid { grid-template-columns: 1fr; gap: 0; }
+}
 .cta h2 {
   margin-top: 14px;
   font-size: clamp(38px, 4.5vw, 61px);

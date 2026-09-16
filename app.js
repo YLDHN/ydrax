@@ -74,3 +74,79 @@ const sectionObserver = new IntersectionObserver(
 );
 
 sections.forEach(section => sectionObserver.observe(section));
+
+/* CONTACT FORM */
+const contactForm = document.getElementById("contactForm");
+
+if (contactForm) {
+  const notice = document.getElementById("contactNotice");
+  const submit = document.getElementById("contactSubmit");
+  const fields = {
+    name: document.getElementById("cf-name"),
+    email: document.getElementById("cf-email"),
+    message: document.getElementById("cf-message"),
+  };
+
+  const isValid = {
+    name: value => value.trim().length >= 2,
+    email: value => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim()),
+    message: value => value.trim().length >= 10,
+  };
+
+  function validateField(key) {
+    const input = fields[key].querySelector("input, textarea");
+    const ok = isValid[key](input.value);
+    fields[key].classList.toggle("invalid", !ok);
+    return ok;
+  }
+
+  Object.keys(fields).forEach(key => {
+    const input = fields[key].querySelector("input, textarea");
+    input.addEventListener("blur", () => validateField(key));
+    input.addEventListener("input", () => {
+      if (fields[key].classList.contains("invalid")) validateField(key);
+    });
+  });
+
+  function setNotice(type, text) {
+    notice.innerHTML = text ? `<div class="${type}">${text}</div>` : "";
+  }
+
+  contactForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    setNotice("", "");
+
+    const allValid = Object.keys(fields).map(validateField).every(Boolean);
+    if (!allValid) {
+      setNotice("err", "Merci de corriger les champs surlignés.");
+      return;
+    }
+
+    const data = new FormData(contactForm);
+    const original = submit.innerHTML;
+    submit.disabled = true;
+    submit.innerHTML = '<span class="form-spinner"></span> Envoi…';
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(data.entries())),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setNotice("err", result.error || "L'envoi a échoué. Réessayez.");
+        return;
+      }
+
+      contactForm.reset();
+      setNotice("ok", "Message envoyé. Nous revenons vers vous très vite.");
+    } catch (error) {
+      setNotice("err", "Connexion impossible. Écrivez-nous à contact.ydrax@gmail.com.");
+    } finally {
+      submit.disabled = false;
+      submit.innerHTML = original;
+    }
+  });
+}

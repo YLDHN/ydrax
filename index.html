@@ -346,9 +346,71 @@
               Expliquez-nous votre besoin. Nous analysons le projet et
               revenons vers vous avec une proposition adaptée.
             </p>
-            <a class="button button-primary" href="mailto:contact.ydrax@gmail.com">
-              Démarrer une discussion <span>→</span>
-            </a>
+
+            <form class="contact-form" id="contactForm" novalidate>
+              <fieldset class="chip-group">
+                <legend>Votre projet concerne</legend>
+                <div class="chips" role="radiogroup" aria-label="Type de projet">
+                  <label class="chip"><input type="radio" name="type" value="Site web" checked /><span>Site web</span></label>
+                  <label class="chip"><input type="radio" name="type" value="Intelligence artificielle" /><span>IA</span></label>
+                  <label class="chip"><input type="radio" name="type" value="Systèmes &amp; réseaux" /><span>Systèmes &amp; réseaux</span></label>
+                  <label class="chip"><input type="radio" name="type" value="Infrastructure" /><span>Infrastructure</span></label>
+                  <label class="chip"><input type="radio" name="type" value="Autre / je ne sais pas encore" /><span>Autre</span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="chip-group">
+                <legend>Budget envisagé <span>(facultatif)</span></legend>
+                <div class="chips" role="radiogroup" aria-label="Budget envisagé">
+                  <label class="chip"><input type="radio" name="budget" value="< 2 000 €" /><span>&lt; 2 000 €</span></label>
+                  <label class="chip"><input type="radio" name="budget" value="2 000 – 5 000 €" /><span>2–5 k€</span></label>
+                  <label class="chip"><input type="radio" name="budget" value="5 000 – 15 000 €" /><span>5–15 k€</span></label>
+                  <label class="chip"><input type="radio" name="budget" value="> 15 000 €" /><span>&gt; 15 k€</span></label>
+                  <label class="chip"><input type="radio" name="budget" value="À définir ensemble" /><span>À définir</span></label>
+                </div>
+              </fieldset>
+
+              <div class="form-grid">
+                <div class="form-field" id="cf-name">
+                  <label for="cf-name-input">Nom complet</label>
+                  <input id="cf-name-input" name="name" type="text" autocomplete="name" placeholder="Jean Dupont" required />
+                  <small class="form-err">Merci d'indiquer votre nom.</small>
+                </div>
+
+                <div class="form-field" id="cf-email">
+                  <label for="cf-email-input">Email</label>
+                  <input id="cf-email-input" name="email" type="email" autocomplete="email" placeholder="jean@entreprise.fr" required />
+                  <small class="form-err">Adresse email invalide.</small>
+                </div>
+              </div>
+
+              <div class="form-field" id="cf-phone">
+                <label for="cf-phone-input">Téléphone <span>(facultatif)</span></label>
+                <input id="cf-phone-input" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" />
+              </div>
+
+              <div class="form-field" id="cf-message">
+                <label for="cf-message-input">Décrivez votre besoin</label>
+                <textarea id="cf-message-input" name="message" placeholder="Objectifs, contexte, délais souhaités…" required></textarea>
+                <small class="form-err">Décrivez votre besoin en quelques mots.</small>
+              </div>
+
+              <div class="form-hp" aria-hidden="true">
+                <label for="cf-company">Société</label>
+                <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="form-notice" id="contactNotice" role="status" aria-live="polite"></div>
+
+              <button class="button button-primary" type="submit" id="contactSubmit">
+                Envoyer la demande <span>→</span>
+              </button>
+
+              <p class="form-alt">
+                Ou écrivez directement à
+                <a href="mailto:contact.ydrax@gmail.com">contact.ydrax@gmail.com</a>
+              </p>
+            </form>
           </div>
         </div>
       </div>
