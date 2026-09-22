@@ -189,54 +189,133 @@ function stateAt(w, tau) {
   return { x, y, ux: dx / len, uy: dy / len, dist, remain };
 }
 
-// Silhouettes noires façon "gens d'affaires" : costume, femme cheveux longs en jupe ou en pantalon
+// Silhouettes "gens d'affaires" : costume, femme en jupe (cheveux longs) ou en pantalon (queue de cheval).
+// La marche suit un vrai cycle : le pied d'appui reste posé au sol, le genou plie pendant le balancement,
+// le bassin monte et descend deux fois par cycle, les bras balancent à l'opposé avec le coude qui se plie.
+const INK = '#0d1017', INK_BACK = '#1b202a';   // membres du côté éloigné un peu plus clairs : on lit mieux la foulée
+const DUTY = 0.58;                             // part du cycle où le pied est au sol
+const hash = (i, salt) => { const v = Math.sin(i * 127.1 + salt * 311.7) * 43758.5453; return v - Math.floor(v); };
+walkers.forEach((w, i) => {
+  const r = hash(i, 1);
+  w.acc = w.type === 'suit' ? (r < 0.4 ? 'case' : 'none')
+        : w.type === 'skirt' ? (r < 0.5 ? 'bag' : 'none')
+        : (r < 0.45 ? 'pack' : 'none');
+  w.hairVar = hash(i, 2);
+});
+
 function drawPerson(ctx, w, s) {
   const h = BASE_H * scaleAt(s.y) * w.h;
   const woman = w.type !== 'suit';
-  const stride = h * (woman ? 0.56 : 0.64) * w.strideMul;
-  const ph = (s.dist / stride) * Math.PI;
-  const bob = Math.abs(Math.cos(ph)) * h * 0.016;
   const x = s.x, y = s.y;
-  const fx = s.ux, fy = s.uy * 0.5, px = -s.uy, py = s.ux * 0.5;
-  const wf = 0.55 + 0.45 * Math.abs(s.uy);
-  const hipY = y - h * 0.48 - bob, shY = y - h * 0.8 - bob;
+  const fx = s.ux, fy = s.uy;                   // axe avant, dans le plan de l'image
+  const px = -s.uy, py = s.ux * 0.5;            // axe latéral, écrasé par la perspective
+  const wf = 0.55 + 0.45 * Math.abs(s.uy);      // largeur apparente : de profil étroit, de face large
+  const S = h * (woman ? 0.3 : 0.33) * w.strideMul;   // longueur d'un pas
+  const cyc = s.dist / (2 * S);
+  const bob = Math.cos(2 * Math.PI * (2 * cyc - DUTY)) * h * 0.02;   // plus haut quand la jambe d'appui passe sous le bassin
+  const hipY = y - h * 0.49 - bob;
+  const shY = hipY - h * 0.31;
+  const hipSp = h * (woman ? 0.036 : 0.046);
+  const far = py >= 0 ? -1 : 1;                 // côté le plus loin de la caméra
+  const T = h * 0.25, SH = h * 0.236;          // cuisse, tibia
 
-  ctx.fillStyle = ctx.strokeStyle = '#000';
   ctx.lineCap = ctx.lineJoin = 'round';
   const seg = (ax, ay, bx, by, wd) => { ctx.lineWidth = wd; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); };
+  const ink = c => { ctx.fillStyle = ctx.strokeStyle = c; };
+  const phaseOf = sd => (((cyc + (sd > 0 ? 0 : 0.5)) % 1) + 1) % 1;
 
-  // jambes
-  const knees = [];
-  const hipSp = h * (woman ? 0.038 : 0.048);
+  // --- jambes (cinématique inverse à deux segments, genou vers l'avant)
+  const legs = {};
   [-1, 1].forEach(sd => {
-    const lp = ph + (sd > 0 ? 0 : Math.PI);
-    const sw = Math.sin(lp), lift = Math.max(0, Math.cos(lp));
-    const hx = x + px * sd * hipSp, hy = hipY + py * sd * hipSp;
-    const kf = (sw * 0.1 + lift * 0.05) * h, af = (sw * 0.06 - lift * 0.06) * h;
-    const kx = hx + fx * kf, ky = hy + h * 0.25 + fy * kf;
-    const ax = kx + fx * af, ay = ky + h * (0.235 - lift * 0.045) + fy * af;
-    knees.push([kx, ky]);
-    if (w.type === 'skirt') {
-      seg(hx, hy, kx, ky, h * 0.075);
-      seg(kx, ky, ax, ay, h * 0.045);                                   // jambe fine
-      seg(ax, ay, ax + fx * h * 0.05, ay + fy * h * 0.05 + h * 0.004, h * 0.035); // escarpin
-      seg(ax - fx * h * 0.005, ay, ax - fx * h * 0.008, ay + h * 0.02, h * 0.018); // talon
-    } else if (woman) {
-      seg(hx, hy, kx, ky, h * 0.08);
-      seg(kx, ky, ax, ay, h * 0.06);
-      seg(ax, ay, ax + fx * h * 0.05, ay + fy * h * 0.05 + h * 0.004, h * 0.035);
+    const p = phaseOf(sd);
+    let a, lift = 0, ang;
+    if (p < DUTY) {
+      const q = p / DUTY;
+      a = S * DUTY * (1 - 2 * q);                // pied immobile au sol pendant que le corps avance
+      ang = q > 0.72 ? (q - 0.72) / 0.28 * 0.55 : 0;   // le talon décolle en fin d'appui
     } else {
-      seg(hx, hy, kx, ky, h * 0.1);                                     // pantalon de costume
-      seg(kx, ky, ax, ay, h * 0.088);
-      seg(ax, ay + h * 0.005, ax + fx * h * 0.07, ay + fy * h * 0.07 + h * 0.008, h * 0.05); // chaussure
+      const q = (p - DUTY) / (1 - DUTY), e = q * q * (3 - 2 * q);
+      a = S * DUTY * (2 * e - 1);
+      lift = Math.sin(Math.PI * Math.min(1, q * 1.15)) * h * 0.055;
+      ang = 0.55 * (1 - q) * (1 - q) - 0.25 * Math.sin(Math.PI * q);   // pointe tendue puis relevée avant l'attaque du talon
     }
+    const hx = x + px * sd * hipSp, hy = hipY + py * sd * hipSp;
+    let b = h * 0.49 + bob - h * 0.025 - lift;
+    let d = Math.hypot(a, b); const dmax = (T + SH) * 0.998;
+    if (d > dmax) { a *= dmax / d; b *= dmax / d; d = dmax; }
+    const al = Math.acos(Math.max(-1, Math.min(1, (T * T + d * d - SH * SH) / (2 * T * d))));
+    const dx = a / d, dy = b / d;
+    const ka = T * (Math.cos(al) * dx + Math.sin(al) * dy), kb = T * (Math.cos(al) * dy - Math.sin(al) * dx);
+    const P = (sa, sb) => [hx + fx * sa, hy + fy * sa + sb];
+    const fl = h * (woman ? 0.066 : 0.078);
+    legs[sd] = { hip: [hx, hy], knee: P(ka, kb), ankle: P(a, b), toe: P(a + fl * Math.cos(ang), b + fl * Math.sin(ang)), p };
   });
 
-  // jupe crayon qui suit l'écart des genoux
-  if (w.type === 'skirt') {
-    const hiW = h * 0.1 * wf;
-    const mx = (knees[0][0] + knees[1][0]) / 2, my = Math.max(knees[0][1], knees[1][1]) + h * 0.01;
-    const half = Math.max(h * 0.075 * wf, Math.abs(knees[0][0] - knees[1][0]) / 2 + h * 0.04);
+  const drawLeg = sd => {
+    const L = legs[sd];
+    if (w.type === 'skirt') {
+      seg(...L.hip, ...L.knee, h * 0.07);
+      seg(...L.knee, ...L.ankle, h * 0.042);
+      seg(...L.ankle, ...L.toe, h * 0.03);
+    } else if (woman) {
+      seg(...L.hip, ...L.knee, h * 0.078);
+      seg(...L.knee, ...L.ankle, h * 0.058);
+      seg(...L.ankle, ...L.toe, h * 0.034);
+    } else {
+      seg(...L.hip, ...L.knee, h * 0.098);      // pantalon de costume, légèrement évasé en bas
+      seg(...L.knee, ...L.ankle, h * 0.086);
+      seg(L.ankle[0], L.ankle[1] + h * 0.006, L.toe[0], L.toe[1] + h * 0.008, h * 0.045);
+    }
+  };
+
+  // --- haut du corps légèrement penché vers l'avant (cisaillement autour du bassin)
+  const lean = h * 0.028;
+  const kx = -fx * lean / (hipY - shY);
+  const upper = fn => { ctx.save(); ctx.transform(1, 0, kx, 1, -kx * hipY, 0); fn(); ctx.restore(); };
+
+  const shW = h * (woman ? 0.1 : 0.138) * wf;
+  const armDraw = sd => {
+    const p = phaseOf(sd);
+    const carrying = w.acc === 'case' && sd === -far;
+    const A = (woman ? 0.34 : 0.42) * (carrying ? 0.35 : 1);
+    const th = -A * Math.cos(2 * Math.PI * p);  // opposé à la jambe du même côté
+    const th2 = carrying ? th * 0.8 : th + 0.1 + 0.4 * Math.max(0, th / A);
+    const U = h * 0.165, F = h * 0.15;
+    const sx = x + px * sd * shW * 0.86, sy = shY + h * 0.045 + py * sd * shW * 0.86;
+    const ea = U * Math.sin(th), eb = U * Math.cos(th);
+    const ha = ea + F * Math.sin(th2), hb = eb + F * Math.cos(th2);
+    const ex = sx + fx * ea, ey = sy + fy * ea + eb, hx = sx + fx * ha, hy = sy + fy * ha + hb;
+    seg(sx, sy, ex, ey, h * (woman ? 0.05 : 0.066));
+    seg(ex, ey, hx, hy, h * (woman ? 0.042 : 0.056));
+    ctx.beginPath(); ctx.arc(hx, hy, h * 0.026, 0, Math.PI * 2); ctx.fill();
+    if (carrying) {                             // mallette
+      const cw = h * 0.075, ch = h * 0.085, ox = fx * cw, oy = fy * cw * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(hx - ox, hy - oy + h * 0.015); ctx.lineTo(hx + ox, hy + oy + h * 0.015);
+      ctx.lineTo(hx + ox, hy + oy + h * 0.015 + ch); ctx.lineTo(hx - ox, hy - oy + h * 0.015 + ch);
+      ctx.closePath(); ctx.fill();
+    }
+  };
+
+  // 1) côté éloigné
+  ink(INK_BACK);
+  drawLeg(far);
+  upper(() => armDraw(far));
+  if (w.acc === 'pack') upper(() => {           // sac à dos derrière le buste
+    const bx = x - fx * h * 0.06, bw = shW * 0.8;
+    ctx.beginPath();
+    ctx.moveTo(bx - bw, shY + h * 0.03); ctx.lineTo(bx + bw, shY + h * 0.03);
+    ctx.lineTo(bx + bw * 1.05, shY + h * 0.22); ctx.lineTo(bx - bw * 1.05, shY + h * 0.22);
+    ctx.closePath(); ctx.fill();
+  });
+
+  // 2) jambe proche, jupe, buste, tête
+  ink(INK);
+  drawLeg(-far);
+  if (w.type === 'skirt') {                     // jupe crayon qui suit l'écart des genoux
+    const k0 = legs[-1].knee, k1 = legs[1].knee, hiW = h * 0.1 * wf;
+    const mx = (k0[0] + k1[0]) / 2, my = Math.max(k0[1], k1[1]) + h * 0.012;
+    const half = Math.max(h * 0.072 * wf, Math.abs(k0[0] - k1[0]) / 2 + h * 0.038);
     ctx.beginPath();
     ctx.moveTo(x - hiW * 0.8, hipY - h * 0.06);
     ctx.lineTo(x + hiW * 0.8, hipY - h * 0.06);
@@ -246,56 +325,76 @@ function drawPerson(ctx, w, s) {
     ctx.fill();
   }
 
-  // buste
-  const shW = h * (woman ? 0.1 : 0.14) * wf;
-  const waW = h * (woman ? 0.068 : 0.092) * wf;
-  const hiW = h * (woman ? 0.092 : 0.098) * wf;
-  const hemY = hipY + h * (woman ? 0.02 : 0.07);                        // veste qui descend sur les hanches
-  const waistY = shY + (hipY - shY) * 0.6;
-  ctx.beginPath();
-  ctx.moveTo(x - shW, shY + h * 0.06);
-  ctx.quadraticCurveTo(x - shW * 0.98, shY + h * 0.01, x - shW * 0.45, shY - h * 0.015);
-  ctx.lineTo(x + shW * 0.45, shY - h * 0.015);
-  ctx.quadraticCurveTo(x + shW * 0.98, shY + h * 0.01, x + shW, shY + h * 0.06);
-  ctx.quadraticCurveTo(x + waW * 1.02, waistY - h * 0.08, x + waW, waistY);
-  ctx.quadraticCurveTo(x + hiW * 1.05, hemY - h * 0.05, x + hiW, hemY);
-  ctx.lineTo(x - hiW, hemY);
-  ctx.quadraticCurveTo(x - hiW * 1.05, hemY - h * 0.05, x - waW, waistY);
-  ctx.quadraticCurveTo(x - waW * 1.02, waistY - h * 0.08, x - shW, shY + h * 0.06);
-  ctx.fill();
-
-  // bras (se balancent à l'opposé des jambes)
-  [-1, 1].forEach(sd => {
-    const a = Math.sin(ph + (sd > 0 ? Math.PI : 0)) * (woman ? 0.8 : 1);
-    const sx = x + px * sd * shW * 0.88, sy = shY + h * 0.05 + py * sd * shW * 0.88;
-    const ex = sx + fx * a * 0.06 * h + px * sd * h * 0.012, ey = sy + h * 0.15 + fy * a * 0.06 * h;
-    const hx = ex + fx * (a * 0.085 + 0.025) * h, hy = ey + h * 0.135 + fy * (a * 0.085 + 0.025) * h;
-    seg(sx, sy, ex, ey, h * (woman ? 0.052 : 0.07));
-    seg(ex, ey, hx, hy, h * (woman ? 0.044 : 0.06));
-  });
-
-  // cou + tête
-  const hx = x + fx * h * 0.01;
-  seg(x, shY + h * 0.01, hx, shY - h * 0.045, h * (woman ? 0.042 : 0.055));
-  if (woman) {
-    const hy = shY - h * 0.095;
-    ctx.beginPath(); ctx.ellipse(hx, hy, h * 0.063, h * 0.076, 0, 0, Math.PI * 2); ctx.fill();
-    // cheveux longs : épousent la tête puis s'évasent sur les épaules et le dos
-    const bx = hx - fx * h * 0.03;
+  upper(() => {
+    const waW = h * (woman ? 0.066 : 0.09) * wf;
+    const hiW = h * (woman ? 0.09 : 0.097) * wf;
+    const hemY = hipY + h * (woman ? 0.02 : 0.075);   // veste qui descend sur les hanches
+    const waistY = shY + (hipY - shY) * 0.6;
     ctx.beginPath();
-    ctx.moveTo(bx, hy - h * 0.088);
-    ctx.bezierCurveTo(bx + h * 0.085, hy - h * 0.088, bx + h * 0.075, hy + h * 0.05, bx + h * 0.085, shY + h * 0.05);
-    ctx.quadraticCurveTo(bx + h * 0.08, shY + h * 0.13, bx + h * 0.03, shY + h * 0.15);
-    ctx.quadraticCurveTo(bx, shY + h * 0.12, bx - h * 0.03, shY + h * 0.15);
-    ctx.quadraticCurveTo(bx - h * 0.08, shY + h * 0.13, bx - h * 0.085, shY + h * 0.05);
-    ctx.bezierCurveTo(bx - h * 0.075, hy + h * 0.05, bx - h * 0.085, hy - h * 0.088, bx, hy - h * 0.088);
+    ctx.moveTo(x - shW, shY + h * 0.06);
+    ctx.quadraticCurveTo(x - shW * 0.98, shY + h * 0.01, x - shW * 0.45, shY - h * 0.015);
+    ctx.lineTo(x + shW * 0.45, shY - h * 0.015);
+    ctx.quadraticCurveTo(x + shW * 0.98, shY + h * 0.01, x + shW, shY + h * 0.06);
+    ctx.quadraticCurveTo(x + waW * 1.02, waistY - h * 0.08, x + waW, waistY);
+    ctx.quadraticCurveTo(x + hiW * 1.05, hemY - h * 0.05, x + hiW, hemY);
+    ctx.lineTo(x - hiW, hemY);
+    ctx.quadraticCurveTo(x - hiW * 1.05, hemY - h * 0.05, x - waW, waistY);
+    ctx.quadraticCurveTo(x - waW * 1.02, waistY - h * 0.08, x - shW, shY + h * 0.06);
     ctx.fill();
-  } else {
-    const hy = shY - h * 0.1;
-    ctx.beginPath(); ctx.ellipse(hx, hy, h * 0.066, h * 0.08, 0, 0, Math.PI * 2); ctx.fill();
-    // cheveux courts : léger volume sur le dessus
-    ctx.beginPath(); ctx.ellipse(hx - fx * h * 0.01, hy - h * 0.035, h * 0.064, h * 0.052, 0, 0, Math.PI * 2); ctx.fill();
-  }
+
+    if (w.acc === 'bag') {                      // sac porté à l'épaule, qui se balance un peu
+      const sd = -far, sw = Math.sin(2 * Math.PI * cyc) * h * 0.012;
+      const sx = x + px * sd * shW * 0.7, sy = shY + h * 0.01 + py * sd * shW * 0.7;
+      const bx = x + px * sd * hiW * 1.25 - fx * h * 0.02 + fx * sw, by = hipY - h * 0.02;
+      ctx.lineWidth = h * 0.012; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(bx, by - h * 0.04); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(bx, by, h * 0.05, h * 0.042, 0, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // cou + tête (légère oscillation avec le pas)
+    const nod = Math.sin(4 * Math.PI * cyc) * h * 0.004;
+    const hx = x + fx * h * 0.012;
+    seg(x, shY + h * 0.01, hx, shY - h * 0.045, h * (woman ? 0.04 : 0.052));
+    if (woman) {
+      const hy = shY - h * 0.095 + nod;
+      ctx.beginPath(); ctx.ellipse(hx, hy, h * 0.061, h * 0.074, 0, 0, Math.PI * 2); ctx.fill();
+      const bx = hx - fx * h * 0.03;
+      if (w.type === 'skirt') {                 // cheveux longs : épousent la tête puis s'évasent sur les épaules
+        const len = 0.12 + w.hairVar * 0.05;
+        ctx.beginPath();
+        ctx.moveTo(bx, hy - h * 0.086);
+        ctx.bezierCurveTo(bx + h * 0.083, hy - h * 0.086, bx + h * 0.074, hy + h * 0.05, bx + h * 0.08, shY + h * 0.04);
+        ctx.quadraticCurveTo(bx + h * 0.075, shY + h * len, bx + h * 0.03, shY + h * (len + 0.02));
+        ctx.quadraticCurveTo(bx, shY + h * (len - 0.01), bx - h * 0.03, shY + h * (len + 0.02));
+        ctx.quadraticCurveTo(bx - h * 0.075, shY + h * len, bx - h * 0.08, shY + h * 0.04);
+        ctx.bezierCurveTo(bx - h * 0.074, hy + h * 0.05, bx - h * 0.083, hy - h * 0.086, bx, hy - h * 0.086);
+        ctx.fill();
+      } else {                                  // queue de cheval qui suit le mouvement
+        ctx.beginPath(); ctx.ellipse(hx - fx * h * 0.006, hy - h * 0.022, h * 0.064, h * 0.06, 0, 0, Math.PI * 2); ctx.fill();
+        const tx = hx - fx * h * 0.06, ty = hy - h * 0.03, sway = Math.sin(4 * Math.PI * cyc + 1) * h * 0.012;
+        ctx.lineWidth = h * 0.032;
+        ctx.beginPath(); ctx.moveTo(tx, ty);
+        ctx.quadraticCurveTo(tx - fx * h * 0.05, ty + h * 0.03, tx - fx * h * 0.035 + sway * fx, ty + h * 0.1);
+        ctx.stroke();
+      }
+    } else {
+      const hy = shY - h * 0.1 + nod;
+      ctx.beginPath(); ctx.ellipse(hx, hy, h * 0.064, h * 0.078, 0, 0, Math.PI * 2); ctx.fill();
+      // cheveux courts : léger volume sur le dessus, plus ou moins marqué
+      const vol = 0.048 + w.hairVar * 0.012;
+      ctx.beginPath(); ctx.ellipse(hx - fx * h * 0.012, hy - h * 0.034, h * 0.064, h * vol, 0, 0, Math.PI * 2); ctx.fill();
+      // col de chemise clair visible de face
+      if (s.uy > 0.35) {
+        ctx.fillStyle = 'rgba(190,200,220,.35)';
+        ctx.beginPath();
+        ctx.moveTo(x - h * 0.022, shY - h * 0.012); ctx.lineTo(x + h * 0.022, shY - h * 0.012); ctx.lineTo(x, shY + h * 0.05);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = INK;
+      }
+    }
+
+    ink(INK);
+    armDraw(-far);
+  });
 }
 
 const stage = document.getElementById('campusStage');
@@ -304,10 +403,12 @@ if (!stage || !cv) return;
 const ctx = cv.getContext('2d');
 const layer = document.createElement('canvas');   // calque des silhouettes, pour leur donner un fin contour lumineux
 const lctx = layer.getContext('2d');
+const rim = document.createElement('canvas');     // liseré de lumière sur le haut des silhouettes
+const rctx = rim.getContext('2d');
 let clock = 0, last = performance.now(), running = true, raf = 0;
 function resize() {
   const r = stage.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
-  cv.width = layer.width = Math.round(r.width * dpr); cv.height = layer.height = Math.round(r.height * dpr);
+  cv.width = layer.width = rim.width = Math.round(r.width * dpr); cv.height = layer.height = rim.height = Math.round(r.height * dpr);
 }
 new ResizeObserver(resize).observe(stage); resize();
 
@@ -350,12 +451,15 @@ function frame(now) {
   // ombres au sol directement sur la scène
   visible.forEach(({ w, s }) => {
     const h = BASE_H * scaleAt(s.y) * w.h;
-    ctx.globalAlpha = s.alpha; ctx.fillStyle = 'rgba(0,0,0,.38)';
-    ctx.beginPath(); ctx.ellipse(s.x, s.y, h * 0.18, h * 0.06, 0, 0, Math.PI * 2); ctx.fill();
+    const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, h * 0.2);
+    g.addColorStop(0, 'rgba(0,0,0,.3)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.globalAlpha = s.alpha; ctx.fillStyle = g;
+    ctx.beginPath(); ctx.ellipse(s.x, s.y, h * 0.2, h * 0.065, 0, 0, Math.PI * 2); ctx.fill();
   });
   ctx.globalAlpha = 1;
 
-  // silhouettes dessinées sur un calque, puis collées avec un halo clair très léger (visibles même à contre-jour)
+  // silhouettes dessinées sur un calque, puis collées avec un très léger contour et un liseré de lumière
+  // sur le haut (comme l'éclairage des lampadaires), pour qu'elles se fondent dans la scène sans découpe dure
   const pass = list => {
     lctx.setTransform(1, 0, 0, 1, 0, 0); lctx.clearRect(0, 0, layer.width, layer.height);
     if (!list.length) return;
@@ -363,11 +467,13 @@ function frame(now) {
     list.forEach(({ w, s }) => { lctx.globalAlpha = s.alpha; drawPerson(lctx, w, s); });
     lctx.globalAlpha = 1;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.shadowColor = 'rgba(215,228,255,.55)'; ctx.shadowBlur = Math.max(2, 2.2 * k);
-    ctx.drawImage(layer, 0, 0);
-    ctx.shadowColor = 'rgba(215,228,255,.35)'; ctx.shadowBlur = Math.max(1, 0.8 * k);
+    ctx.shadowColor = 'rgba(160,178,210,.16)'; ctx.shadowBlur = Math.max(1, 1.1 * k);
     ctx.drawImage(layer, 0, 0);
     ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
+    rctx.globalCompositeOperation = 'copy'; rctx.drawImage(layer, 0, 0);
+    rctx.globalCompositeOperation = 'source-in'; rctx.fillStyle = 'rgba(214,222,240,.38)'; rctx.fillRect(0, 0, rim.width, rim.height);
+    rctx.globalCompositeOperation = 'destination-out'; rctx.drawImage(layer, 0.35 * k, 0.9 * k);
+    ctx.drawImage(rim, 0, 0);
     ctx.setTransform(k, 0, 0, k, 0, 0);
   };
   // 1) les gens derrière le rond central, 2) l'arbre par-dessus eux, 3) tous les autres
