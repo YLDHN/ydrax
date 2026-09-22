@@ -1168,6 +1168,8 @@ footer::before {
   margin-bottom: 26px;
 }
 .sim-step span {
+  flex: none;
+  white-space: nowrap;
   color: var(--lamp);
   font-family: var(--font-display);
   font-weight: 600;
@@ -1214,8 +1216,8 @@ footer::before {
 /* TARIFS : forfaits */
 .forfaits {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 .forfait {
   position: relative;
@@ -1571,7 +1573,6 @@ footer::before {
 
 /* RESPONSIVE (pages secondaires) */
 @media (max-width: 1180px) {
-  .forfaits { grid-template-columns: repeat(3, 1fr); }
   .sim-layout { grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; }
 }
 @media (max-width: 980px) {
