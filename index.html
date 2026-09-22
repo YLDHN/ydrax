@@ -64,16 +64,11 @@
   }
   </script>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js"
-      }
-    }
-  </script>
-
   <script>document.documentElement.classList.add("js");</script>
-</head><body>
+
+  <link rel="preload" as="image" href="/assets/campus/fond.jpg" />
+</head>
+<body>
   <a class="skip-link" href="#main">Aller au contenu</a>
   <div class="noise" aria-hidden="true"></div>
 
@@ -119,7 +114,11 @@
 
   <main id="main">
     <section class="hero" id="home">
-      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-campus" aria-hidden="true">
+        <div class="campus-stage" id="campusStage">
+          <canvas id="campusCanvas"></canvas>
+        </div>
+      </div>
 
       <div class="container hero-container">
         <div class="hero-copy reveal">
@@ -142,17 +141,6 @@
             </a>
           </div>
         </div>
-      </div>
-
-      <div class="network-scene" id="networkScene" aria-hidden="true">
-        <div class="network-glow"></div>
-        <canvas id="globeCanvas"></canvas>
-
-        <div class="network-label label-web" data-group="web"><i></i>Web</div>
-        <div class="network-label label-ai" data-group="ai"><i></i>IA</div>
-        <div class="network-label label-network" data-group="network"><i></i>Réseaux</div>
-        <div class="network-label label-systems" data-group="systems"><i></i>Systèmes</div>
-        <div class="network-label label-infra" data-group="infra"><i></i>Infrastructure</div>
       </div>
 
       <div class="container hero-footer">
@@ -316,6 +304,6 @@
   </footer>
 
   <script src="/app.js"></script>
-  <script type="module" src="/src/globe.js"></script>
+  <script src="/src/campus.js" defer></script>
 </body>
 </html>

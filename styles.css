@@ -202,15 +202,40 @@ body.menu-open { overflow: hidden; }
   align-items: center;
   isolation: isolate;
 }
-.hero-grid {
+.hero-campus {
   position: absolute;
   inset: 0;
-  opacity: .11;
-  background-image:
-    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse at 70% 50%, #000, transparent 72%);
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+/* L'image garde ses proportions et couvre tout le hero (comme background-size: cover) :
+   le canvas des silhouettes est posé exactement dessus. */
+.campus-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, calc(100svh * 1671 / 941));
+  aspect-ratio: 1671 / 941;
+  transform: translate(-50%, -50%);
+  background: url("assets/campus/fond.jpg") center / cover no-repeat;
+}
+#campusCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* Voile pour garder le texte lisible à gauche et fondre le bas dans la section suivante. */
+.hero-campus::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(3,6,9,.92) 0%, rgba(3,6,9,.78) 38%, rgba(3,6,9,.25) 66%, rgba(3,6,9,.05) 100%),
+    linear-gradient(180deg, rgba(3,6,9,.55) 0%, transparent 18%, transparent 72%, var(--bg) 100%);
+  pointer-events: none;
 }
 .hero-container { position: relative; z-index: 5; }
 .hero-copy {
@@ -261,71 +286,6 @@ body.menu-open { overflow: hidden; }
   border-color: rgba(255,255,255,.42);
 }
 
-/* NETWORK */
-.network-scene {
-  position: absolute;
-  z-index: 2;
-  width: min(730px, 62vw);
-  aspect-ratio: 1;
-  right: -4%;
-  top: 50%;
-  transform: translateY(-50%);
-  will-change: transform, opacity;
-}
-.network-glow {
-  position: absolute;
-  inset: 18%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(72,163,255,.06), rgba(72,163,255,.015) 48%, transparent 70%);
-  filter: blur(30px);
-}
-#globeCanvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.network-label {
-  position: absolute;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  color: #e9f0f6;
-  font-size: 12px;
-  background: rgba(7,13,20,.68);
-  border: 1px solid rgba(170,210,245,.17);
-  border-radius: 10px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 12px 45px rgba(0,0,0,.28);
-  animation: labelFloat 5s ease-in-out infinite;
-  transition: border-color .3s ease, background .3s ease, transform .3s ease;
-  cursor: default;
-}
-.network-label.active,
-.network-label:hover {
-  border-color: rgba(190,225,255,.42);
-  background: rgba(10,18,26,.82);
-}
-.network-label i {
-  width: 6px;
-  height: 6px;
-  display: block;
-  border-radius: 50%;
-  background: #a5dbff;
-  box-shadow: 0 0 13px rgba(100,190,255,.95);
-}
-.label-web { top: 19%; left: 16%; }
-.label-ai { top: 13%; right: 10%; animation-delay: -1s; }
-.label-network { top: 49%; left: 2%; animation-delay: -2s; }
-.label-systems { top: 48%; right: 0; animation-delay: -3s; }
-.label-infra { bottom: 17%; left: 28%; animation-delay: -4s; }
-@keyframes labelFloat {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
 .hero-footer {
   position: absolute;
   left: 50%;
@@ -834,7 +794,6 @@ footer { border-top: 1px solid var(--line); padding: 45px 0 28px; }
 
 /* RESPONSIVE */
 @media (max-width: 1080px) {
-  .network-scene { right: -14%; opacity: .7; }
   .hero-copy { width: 70%; }
   .service-grid { grid-template-columns: repeat(2, 1fr); }
   .project-grid { grid-template-columns: 1fr 1fr; }
@@ -852,10 +811,9 @@ footer { border-top: 1px solid var(--line); padding: 45px 0 28px; }
   .hero h1 { font-size: clamp(42px, 13vw, 53px); }
   .hero-description { font-size: 13px; }
   .hero-actions { flex-wrap: wrap; }
-  .network-scene { width: 135vw; right: -34%; top: 68%; opacity: .5; }
-  /* Labels sit on top of the hero copy at this width — the same wording
-     stays available in .hero-tags below. */
-  .network-label { display: none; }
+  .hero-campus::after {
+    background: linear-gradient(180deg, rgba(3,6,9,.88) 0%, rgba(3,6,9,.7) 45%, rgba(3,6,9,.35) 75%, var(--bg) 100%);
+  }
   .hero-footer { bottom: 24px; }
   .hero-tags { display: flex; flex-wrap: wrap; gap: 6px 11px; font-size: 9px; }
   .hero-tags span:not(:last-child)::after { margin-left: 11px; }
