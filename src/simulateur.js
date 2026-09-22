@@ -77,7 +77,7 @@ els.forfaits.addEventListener("click", event => {
 function renderPresets() {
   if (!els.presets) return;
   els.presets.innerHTML =
-    `<span style="color:#6d7984;font-size:11px;align-self:center">Partir d'un exemple :</span>` +
+    `<span style="color:var(--muted);font-size:15px;align-self:center">Partir d'un exemple :</span>` +
     PRESETS.map(p => `
       <button type="button" class="preset${activePreset === p.id ? " is-active" : ""}" data-preset="${p.id}" title="${esc(p.desc)}">
         ${esc(p.title)} <em>${formatEuro(p.total)}</em>

@@ -1,7 +1,7 @@
 // Campus animé du hero : silhouettes qui rejoignent les bâtiments Dev Web, IA et Sys/Infra.
 (() => {
 const W = 1671, H = 941;
-const LOOP = 60;   // durée de la boucle (s) : la scène est strictement identique toutes les 48 s
+const LOOP = 84;   // durée de la boucle (s) : la scène est strictement identique toutes les 84 s
 
 const DOORS = { dev:{glow:[366,418]}, ia:{glow:[835,292]}, sys:{glow:[1300,426]} };
 
@@ -74,7 +74,7 @@ ROUTES.forEach((r, ri) => {
     walkers.push({
       route: r, type,
       offset: (k / n) * LOOP + rnd() * (LOOP / n) * 0.5 + ri * 2.3,
-      speed: 36 + rnd() * 8,
+      speed: (36 + rnd() * 8) * 0.7,   // pas tranquille
       lateral: (rnd() - 0.5) * 26,
       h: type === 'suit' ? 1.0 + rnd() * 0.08 : 0.92 + rnd() * 0.07,
       strideMul: 0.92 + rnd() * 0.16
@@ -169,7 +169,7 @@ function schedule(ROUNDS) {
 }
 // Horaires pré-calculés (sans aucun chevauchement). Si tu modifies les trajets, mets PRESET = null :
 // ils seront recalculés au chargement.
-const PRESET = [[3.2,0],[24.6,-7.5],[43.8,7.5],[10.6,0],[28,-7.5],[45.6,-15],[8.4,-15],[27.4,7.5],[58,15],[14.8,15],[36,7.5],[55.4,7.5],[9.8,-7.5],[34,0],[58.4,15],[11.4,7.5],[34,0],[1.8,-15],[18.6,-7.5],[37,0],[1.4,0],[36.8,-7.5],[41,-7.5],[40.4,0],[16.4,15],[0,-15],[5.2,7.5],[23,7.5],[46.8,0],[58.4,-15],[32.8,-7.5],[50.8,15],[13.8,-7.5],[30.2,15],[37.6,15],[1.2,7.5],[9.2,-7.5],[26.4,-7.5],[5.4,-15],[45.4,7.5],[17.2,15],[54.4,-7.5],[4.6,0],[38,15],[26.4,-15],[45.4,15],[12,-15],[35.8,15],[25.6,7.5]];
+const PRESET = [[5.6,-15],[36,-15],[61.6,0],[12.8,0],[41.4,-7.5],[65.4,15],[9,-15],[33.6,-15],[72.6,-15],[31.8,-15],[42.6,0],[71.8,15],[11.8,-15],[40,-15],[78.2,15],[16.6,7.5],[44.4,15],[77.4,7.5],[22.2,7.5],[45.4,-7.5],[63.8,-15],[41,-15],[51,-7.5],[50.2,0],[6.2,0],[78.6,-15],[0.2,15],[20,-15],[55.8,15],[77,0],[36.6,-7.5],[63.8,15],[6.2,7.5],[31.8,15],[46.2,15],[10.8,15],[1.8,-7.5],[56.4,-15],[71.6,0],[50.8,7.5],[8.2,-7.5],[60.6,-15],[76.6,0],[36.8,7.5],[21,-15],[48,15],[0,-15],[33.6,15],[19.2,7.5]];
 if (PRESET && PRESET.length === walkers.length) walkers.forEach((w, i) => { w.offset = PRESET[i][0]; w.lateral = PRESET[i][1]; });
 else schedule(40);
 
